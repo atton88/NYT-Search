@@ -5,23 +5,32 @@
 $(document).ready(function() {
 
 
+    $("#clearForm").on("click", function() {
+        $(".articleContainer").empty();
+
+    })
 
 
-    $("#submitButton").on("click", generateResults);
+    $("#submitForm").on("click", generateResults);
  
     function generateResults() {
  
-        var searchQuery = "california fires";
-        var beginYear = 2017;
-        var endYear = 2018;
+        event.preventDefault();
+        $(".articleContainer").empty();
+
+
+        var searchQuery = $("#searchTerm").val();
+        var numArticles = $("#numRecords").val();
+        var beginYear = $("#startYear").val();;
+        var endYear = $("#endYear").val();
         console.log(this);
  
-        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=38fecb31515a4473bc5a1d266bae863f&q=" + searchQuery;
+        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=a137abd0d47f4c6b8037df3a92c7b8a3&q=" + searchQuery;
         if (beginYear) {
-            queryURL += "&begin_year=" + beginYear;
+            queryURL += "&begin_date=" + beginYear+"0101";
         }
         if (endYear) {
-            queryURL += "&end_year=" + endYear;
+            queryURL += "&end_date=" + endYear+"1231";
         }
  
         console.log(queryURL);
@@ -37,10 +46,24 @@ $(document).ready(function() {
             console.log(resultsArray);
  
             //appending articles
- 
- 
- 
+            for (i = 0; i < numArticles; i++){
+                var tempJumbo =  $("<div class='jumbotron p-4 mx-3 mb-3'>");
+                var tempA = $('<a href='+ resultsArray[0].web_url +'><h2><span class="badge badge-secondary darkBlue mr-2">'+(i+1)+'</span>' +resultsArray[i].headline.main+ '</h2></a>');
+                var tempP =  $("<p>").text(resultsArray[i].byline.original);
+                tempJumbo.append(tempA);
+                tempJumbo.append(tempP);
+                $(".articleContainer").append(tempJumbo);
+            }
+            
+        //     <!-- <div class="jumbotron p-4 mx-3 mb-3">
+        //     <a href="https://www.nytimes.com/"><h2><span class="badge badge-secondary darkBlue">1</span> Sample Title</h2></a>
+        //     <p>By Richard Painter</p>
+        //   </div>
+        //   <div class="jumbotron p-4 mx-3 mb-3">
+        //     <a href="https://www.nytimes.com/"><h2><span class="badge badge-secondary darkBlue">1</span> Sample Title</h2></a>
+        //     <p>By Richard Painter</p>
+        //   </div> -->
         })
     }
- generateResults();
+//  generateResults();
  })
